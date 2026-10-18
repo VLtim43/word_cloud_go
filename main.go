@@ -9,6 +9,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/math/fixed"
 )
 
 func createCanvas(canvasWidth int, canvasLength int, backgroundColor color.RGBA) *image.RGBA {
@@ -45,6 +49,22 @@ func main() {
 
 	whiteColor := color.RGBA{245, 245, 245, 255}
 	canvas := createCanvas(640, 480, whiteColor)
+
+	// add text
+	text := "Hello"
+	face := basicfont.Face7x13
+
+	width := font.MeasureString(face, text).Ceil()
+	x := (canvas.Bounds().Dx() - width) / 2
+	y := (canvas.Bounds().Dy() + face.Metrics().Height.Ceil()) / 2
+
+	drawer := &font.Drawer{
+		Dst:  canvas,
+		Src:  image.NewUniform(color.Black),
+		Face: face,
+		Dot:  fixed.P(x, y),
+	}
+	drawer.DrawString(text)
 
 	// encode the image as a png
 	err = png.Encode(file, canvas)
