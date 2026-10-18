@@ -11,6 +11,15 @@ import (
 	"path/filepath"
 )
 
+func createCanvas(canvasWidth int, canvasLength int, backgroundColor color.RGBA) *image.RGBA {
+
+	// creates the background image
+	canvas := image.NewRGBA(image.Rect(0, 0, canvasWidth, canvasLength))
+	draw.Draw(canvas, canvas.Bounds(), &image.Uniform{backgroundColor}, image.Point{}, draw.Src)
+
+	return canvas
+}
+
 func main() {
 
 	destination := "./output"
@@ -34,13 +43,8 @@ func main() {
 
 	fmt.Printf("Successfully created image at %v", destinationPath)
 
-	// set canvas attributes
-	canvasWidth := 640
-	canvasLength := 480
-
-	// creates the image
-	canvas := image.NewRGBA(image.Rect(0, 0, canvasWidth, canvasLength))
-	draw.Draw(canvas, canvas.Bounds(), &image.Uniform{color.Black}, image.Point{}, draw.Src)
+	whiteColor := color.RGBA{245, 245, 245, 255}
+	canvas := createCanvas(640, 480, whiteColor)
 
 	// encode the image as a png
 	err = png.Encode(file, canvas)
