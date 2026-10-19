@@ -1,0 +1,9 @@
+{
+  "words": [
+    {"text": "Golang", "weight": 100},
+    {"text": "Python", "weight": 80},
+    {"text": "Docker", "weight": 65},
+    {"text": "Kubernetes", "weight": 45},
+    {"text": "Redis", "weight": 25}
+  ]
+}
