@@ -16,7 +16,6 @@ func createFile(destination string, fileName string) (*os.File, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create output file: %w", err)
 	}
-	fmt.Printf("Successfully created image at %v", destinationPath)
 
 	return file, nil
 }
