@@ -44,7 +44,6 @@ func writeText(canvas *image.RGBA, wordsWithWeights []Word, parsedFont *opentype
 			),
 		}
 		totalHeight += wordLayout[i].bounds.Dy()
-		canvas = placeImage(canvas, wordLayout[i])
 
 		x := canvas.Bounds().Min.X + (canvas.Bounds().Dx()-wordLayout[i].bounds.Dx())/2
 
@@ -53,13 +52,15 @@ func writeText(canvas *image.RGBA, wordsWithWeights []Word, parsedFont *opentype
 		draw.Draw(canvas, backgroundRectangle, image.NewUniform(color.RGBA{0, 173, 216, 255}), image.Point{}, draw.Src)
 
 		// draws the text
-
 		y += wordLayout[i].bounds.Dy()
 
 		// one pixel before the next rectangle
 		if i < len(wordLayout)-1 {
 			y++
 		}
+
+		canvas = placeImage(canvas, wordLayout[i])
+
 	}
 
 	if len(wordLayout) > 0 {

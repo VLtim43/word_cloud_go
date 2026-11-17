@@ -11,8 +11,8 @@ type layout struct {
 	bounds image.Rectangle
 }
 
-// placeImage is the entry point for positioning a measured word on the canvas.
-// TODO: Choose a position that fits and does not overlap other placed words.
 func placeImage(canvas *image.RGBA, wordLayout layout) *image.RGBA {
+	// place images on a spiral and handle collisions
+
 	return canvas
 }
