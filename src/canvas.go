@@ -55,7 +55,7 @@ func writeText(canvas *image.RGBA, wordsWithWeights []Word, parsedFont *opentype
 		x := canvas.Bounds().Min.X + (canvas.Bounds().Dx()-layout.bounds.Dx())/2
 
 		box := image.Rect(x, y, x+layout.bounds.Dx(), y+layout.bounds.Dy())
-		draw.Draw(canvas, box, image.NewUniform(color.RGBA{225, 230, 160, 255}), image.Point{}, draw.Src)
+		draw.Draw(canvas, box, image.NewUniform(color.RGBA{0, 173, 216, 255}), image.Point{}, draw.Src)
 
 		textDrawer := font.Drawer{
 			Dst:  canvas,
