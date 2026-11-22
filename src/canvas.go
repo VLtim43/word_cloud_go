@@ -7,6 +7,7 @@ import (
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
+	"golang.org/x/image/math/fixed"
 )
 
 // create the blank canvas
@@ -21,8 +22,6 @@ func writeText(canvas *image.RGBA, wordsWithWeights []Word, parsedFont *opentype
 
 	wordLayout := make([]layout, len(wordsWithWeights))
 	totalHeight := 0
-
-	y := canvas.Bounds().Min.Y + (canvas.Bounds().Dy()-totalHeight)/2
 
 	for i, word := range wordsWithWeights {
 
@@ -44,27 +43,35 @@ func writeText(canvas *image.RGBA, wordsWithWeights []Word, parsedFont *opentype
 			),
 		}
 		totalHeight += wordLayout[i].bounds.Dy()
+	}
 
-		x := canvas.Bounds().Min.X + (canvas.Bounds().Dx()-wordLayout[i].bounds.Dx())/2
+	if len(wordLayout) > 0 {
+		totalHeight += len(wordLayout) - 1
+	}
+	y := canvas.Bounds().Min.Y + (canvas.Bounds().Dy()-totalHeight)/2
 
-		// drawns a rectangle with each word size
-		backgroundRectangle := image.Rect(x, y, x+wordLayout[i].bounds.Dx(), y+wordLayout[i].bounds.Dy())
+	for i, word := range wordsWithWeights {
+		bounds := wordLayout[i].bounds
+		x := canvas.Bounds().Min.X + (canvas.Bounds().Dx()-bounds.Dx())/2
+
+		// Draw the word's background and place its glyph bounds inside it.
+		backgroundRectangle := image.Rect(x, y, x+bounds.Dx(), y+bounds.Dy())
 		draw.Draw(canvas, backgroundRectangle, image.NewUniform(color.RGBA{0, 173, 216, 255}), image.Point{}, draw.Src)
+		drawer := font.Drawer{
+			Dst:  canvas,
+			Src:  image.NewUniform(color.Black),
+			Face: wordLayout[i].face,
+			Dot:  fixed.P(x-bounds.Min.X, y-bounds.Min.Y),
+		}
+		drawer.DrawString(word.Text)
 
-		// draws the text
-		y += wordLayout[i].bounds.Dy()
+		y += bounds.Dy()
 
 		// one pixel before the next rectangle
 		if i < len(wordLayout)-1 {
 			y++
 		}
 
-		canvas = placeImage(canvas, wordLayout[i])
-
-	}
-
-	if len(wordLayout) > 0 {
-		totalHeight += len(wordLayout) - 1
 	}
 
 	return canvas, nil
