@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"image"
 	"image/color"
 	"image/png"
 	"log"
@@ -12,24 +13,31 @@ import (
 
 func main() {
 
-	whiteColor := color.RGBA{245, 245, 245, 255}
+	canvasColor := color.RGBA{245, 245, 245, 255}
+	canvas := createCanvas(640, 480, canvasColor)
 
 	// read the words list
-	wordsWithWeights, err := readJson("./word.json")
+	words, err := readJson("./word.json")
 	if err != nil {
 		log.Fatalf("Failed to read words: %v", err)
 	}
 
 	// creates the fonts
-	parsedFont, err := opentype.Parse(goregular.TTF)
+	typeface, err := opentype.Parse(goregular.TTF)
 	if err != nil {
 		log.Fatalf("Failed to parse font: %v", err)
 	}
 
-	// writes on canvas
-	canvas, err := writeText(createCanvas(640, 480, whiteColor), wordsWithWeights, parsedFont)
-	if err != nil {
-		log.Fatalf("Failed to draw words: %v", err)
+	occupiedeArea := []image.Rectangle{}
+
+	// place each word into the canvas keeping in mind the previously occupied areas
+	for _, word := range words {
+		rect, err := placeWordRectagle(canvas, word, typeface, occupiedeArea)
+		if err != nil {
+			log.Fatalf("Failed to place %q: %v", word.Text, err)
+		}
+		occupiedeArea = append(occupiedeArea, rect)
+
 	}
 
 	// create the file
