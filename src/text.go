@@ -12,7 +12,7 @@ import (
 
 // Measure the word and return its font face for drawing.
 func createWordRectangle(word Word, typeface *opentype.Font) (image.Rectangle, font.Face, error) {
-	size := 12 + 0.3*float64(max(word.Weight, 0))
+	size := 0.75 * (12 + 0.5*float64(max(word.Weight, 0)))
 
 	face, err := opentype.NewFace(typeface, &opentype.FaceOptions{
 		Size: size,

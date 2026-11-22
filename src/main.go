@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/png"
 	"log"
+	"math"
 	"math/rand"
 
 	"golang.org/x/image/font/gofont/goregular"
@@ -15,7 +16,7 @@ import (
 func main() {
 
 	canvasColor := color.RGBA{245, 245, 245, 255}
-	canvas := createCanvas(640, 480, canvasColor)
+	canvas := createCanvas(1000, 600, canvasColor)
 
 	// read the words list
 	words, err := readJson("./word.json")
@@ -46,25 +47,40 @@ func main() {
 			log.Fatalf("Word %q does not fit on canvas", word.Text)
 		}
 
-		// Try each possible position, starting at a random one.
-		positions := (canvasMaxX + 1) * (canvasMaxY + 1)
-		start := rand.Intn(positions)
+		// Start at the center and move outward along an Archimedean spiral.
+		centerX := canvas.Bounds().Min.X + canvasMaxX/2
+		centerY := canvas.Bounds().Min.Y + canvasMaxY/2
+		maxRadius := math.Hypot(float64(canvasMaxX), float64(canvasMaxY))/2 + 2
+		phase := rand.Float64() * 2 * math.Pi
 		var placedRect image.Rectangle
 		found := false
 
-		for attempt := 0; attempt < positions && !found; attempt++ {
-			position := (start + attempt) % positions
-			x := canvas.Bounds().Min.X + position%(canvasMaxX+1)
-			y := canvas.Bounds().Min.Y + position/(canvasMaxX+1)
+		gap := 4
+
+		for angle := 0.0; 1.5*angle <= maxRadius && !found; angle += 1 / math.Max(1, 1.5*angle) {
+			radius := 1.5 * angle
+			x := centerX + int(math.Round(radius*math.Cos(angle+phase)))
+			y := centerY + int(math.Round(radius*math.Sin(angle+phase)))
+			if x < canvas.Bounds().Min.X || x > canvas.Bounds().Min.X+canvasMaxX ||
+				y < canvas.Bounds().Min.Y || y > canvas.Bounds().Min.Y+canvasMaxY {
+				continue
+			}
 			candidate := image.Rect(x, y, x+rectangleCoordinates.Dx(), y+rectangleCoordinates.Dy())
+
+			// add a small gap so they dont touch
+			spacingRect := image.Rect(
+				candidate.Min.X-gap, candidate.Min.Y-gap,
+				candidate.Max.X+gap, candidate.Max.Y+gap,
+			)
 
 			free := true
 			for _, occupied := range occupiedArea {
-				if !candidate.Intersect(occupied).Empty() {
+				if !spacingRect.Intersect(occupied).Empty() {
 					free = false
 					break
 				}
 			}
+
 			if free {
 				placedRect = candidate
 				found = true

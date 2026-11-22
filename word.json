@@ -1,8 +1,17 @@
-
-   [
-    {"text": "Golang", "weight": 100},
-    {"text": "Python", "weight": 80},
-    {"text": "Docker", "weight": 65},
-    {"text": "Kubernetes", "weight": 45},
-    {"text": "Redis", "weight": 25}
-  ]
+[
+  {"text": "Simplicity", "weight": 100},
+  {"text": "Concurrency", "weight": 95},
+  {"text": "Efficiency", "weight": 90},
+  {"text": "Readability", "weight": 85},
+  {"text": "Fast Compilation", "weight": 80},
+  {"text": "Maintainability", "weight": 75},
+  {"text": "Scalability", "weight": 70},
+  {"text": "Performance", "weight": 65},
+  {"text": "Composition", "weight": 60},
+  {"text": "Static Typing", "weight": 55},
+  {"text": "Garbage Collection", "weight": 50},
+  {"text": "Explicitness", "weight": 45},
+  {"text": "Tooling", "weight": 40},
+  {"text": "Portability", "weight": 35},
+  {"text": "Pragmatism", "weight": 30}
+]
