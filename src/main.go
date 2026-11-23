@@ -47,10 +47,11 @@ func main() {
 			log.Fatalf("Word %q does not fit on canvas", word.Text)
 		}
 
-		// Start at the center and move outward along an Archimedean spiral.
+		// Start at the center and move outward along a vertically squished spiral.
 		centerX := canvas.Bounds().Min.X + canvasMaxX/2
 		centerY := canvas.Bounds().Min.Y + canvasMaxY/2
-		maxRadius := math.Hypot(float64(canvasMaxX), float64(canvasMaxY))/2 + 2
+		const verticalScale = 0.6
+		maxRadius := math.Hypot(float64(canvasMaxX)/2, float64(canvasMaxY)/(2*verticalScale)) + 2
 		phase := rand.Float64() * 2 * math.Pi
 		var placedRect image.Rectangle
 		found := false
@@ -60,7 +61,7 @@ func main() {
 		for angle := 0.0; 1.5*angle <= maxRadius && !found; angle += 1 / math.Max(1, 1.5*angle) {
 			radius := 1.5 * angle
 			x := centerX + int(math.Round(radius*math.Cos(angle+phase)))
-			y := centerY + int(math.Round(radius*math.Sin(angle+phase)))
+			y := centerY + int(math.Round(verticalScale*radius*math.Sin(angle+phase)))
 			if x < canvas.Bounds().Min.X || x > canvas.Bounds().Min.X+canvasMaxX ||
 				y < canvas.Bounds().Min.Y || y > canvas.Bounds().Min.Y+canvasMaxY {
 				continue
