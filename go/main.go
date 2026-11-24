@@ -33,10 +33,12 @@ func sequential(start time.Time) {
 
 // função que executa 3 tasks com goroutines
 func concurrent(start time.Time) {
-	// cria um channel que tem 3 slots para resultados das tasks
-	resultsChannel := make(chan taskResult, 3)
+
 	// cria um waitgroup
 	var wg sync.WaitGroup
+
+	// cria um channel que tem 3 slots para resultados das tasks
+	resultsChannel := make(chan taskResult, 3)
 
 	// roda 3 tasks
 	for i := 1; i <= 3; i++ {
@@ -47,7 +49,7 @@ func concurrent(start time.Time) {
 		go func(id int) {
 
 			resultsChannel <- task(id, start) // roda a task com o id e passa o resultado dela para o channel
-			defer wg.Done()            // espera todas as funções ao redor acabarem e marca como "done" a task
+			defer wg.Done()                   // espera todas as funções ao redor acabarem e marca como "done" a task
 
 		}(i) // função anonima imediatamente é chamada
 	}
