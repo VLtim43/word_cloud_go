@@ -9,6 +9,7 @@ import (
 	"math"
 	"math/rand"
 
+	"golang.org/x/image/font/gofont/gobold"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/font/opentype"
 )
@@ -29,12 +30,20 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to parse font: %v", err)
 	}
+	boldTypeface, err := opentype.Parse(gobold.TTF)
+	if err != nil {
+		log.Fatalf("Failed to parse bold font: %v", err)
+	}
 
 	occupiedArea := []image.Rectangle{}
 
 	// place each word into the canvas keeping in mind the previously occupied areas
 	for _, word := range words {
-		rectangleCoordinates, face, err := createWordRectangle(word, typeface)
+		wordTypeface := typeface
+		if rand.Intn(2) == 0 {
+			wordTypeface = boldTypeface
+		}
+		rectangleCoordinates, face, err := createWordRectangle(word, wordTypeface)
 		if err != nil {
 			log.Fatalf("Failed to measure %q: %v", word.Text, err)
 		}

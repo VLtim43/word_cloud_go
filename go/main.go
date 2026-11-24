@@ -52,6 +52,7 @@ func concurrent(start time.Time) {
 }
 
 func main() {
+	// cada task demora 2 segundos
 	start := time.Now()
 
 	fmt.Println("=== Sequential ===")
