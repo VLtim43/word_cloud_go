@@ -16,7 +16,7 @@ import (
 
 func main() {
 
-	canvasColor := color.RGBA{245, 245, 245, 255}
+	canvasColor := color.RGBA{0, 0, 0, 0}
 	canvas := createCanvas(1000, 600, canvasColor)
 
 	// read the words list
