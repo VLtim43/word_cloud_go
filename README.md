@@ -1,5 +1,5 @@
-Simple Go program that generates a cloud of words
+A simple Go program that generates a word cloud.
 
-Part of a seminary on Programing languages 
+Created for a seminar on programming languages for educational purposes.
 
 ![Word cloud](output/test.png)
